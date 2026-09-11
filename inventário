@@ -1,0 +1,121 @@
+inventario = []
+
+def adicionar_item(nome, quantidade,preço):
+    if not nome.strip():
+        raise ValueError("O nome do item não pode estar vazio.")
+    if quantidade <= 0:
+        raise ValueError("A quantidade deve ser maior que zero.")               
+    if preço <= 0:
+        raise ValueError("O preço deve ser maior que zero.")
+    
+
+def remover_item(nome):
+    for produto in inventario:
+        if produto['nome'] == nome:
+            inventario.remove(produto)
+            return
+    raise ValueError("Item não encontrado no inventário.")
+
+def adicionar_quantidade(nome, quantidade):
+    for produto in inventario:
+        if produto['nome'] == nome:
+            if quantidade <= 0:
+                raise ValueError("A quantidade a ser adicionada deve ser maior que zero.")
+            produto['quantidade'] += quantidade
+            return
+    raise ValueError("Item não encontrado no inventário.")
+
+def remover_quantidade(nome, quantidade):
+    for produto in inventario:
+        if produto['nome'] == nome:
+            if quantidade <= 0:
+                raise ValueError("A quantidade a ser removida deve ser maior que zero.")
+            if produto['quantidade'] < quantidade:
+                raise ValueError("Não há quantidade suficiente do item para remover.")
+            produto['quantidade'] -= quantidade
+            return
+    raise ValueError("Item não encontrado no inventário.")
+
+def buscar_item(nome):
+    for produto in inventario:
+        if produto['nome'] == nome:
+            return produto
+    raise ValueError("Item não encontrado no inventário.")
+
+def listar_inventario():
+    return inventario
+
+def menu():
+    while True:
+        print("\nMenu do Inventário:")
+        print("1. Adicionar item")
+        print("2. Remover item")
+        print("3. Adicionar quantidade")
+        print("4. Remover quantidade")
+        print("5. Buscar item")
+        print("6. Listar inventário")
+        print("7. Sair")
+
+        escolha = input("Escolha uma opção: ")
+
+        if escolha == '1':
+            nome = input("Digite o nome do item: ")
+            quantidade = int(input("Digite a quantidade: "))
+            preço = float(input("Digite o preço: ").strip().replace(",", "."))
+            try:
+                adicionar_item(nome, quantidade, preço)
+                inventario.append({'nome': nome, 'quantidade': quantidade, 'preço': preço})
+                print(f"Item '{nome}' adicionado com sucesso.")
+            except ValueError as e:
+                print(e)
+
+        elif escolha == '2':
+            nome = input("Digite o nome do item a ser removido: ")
+            try:
+                remover_item(nome)
+                print(f"Item '{nome}' removido com sucesso.")
+            except ValueError as e:
+                print(e)
+
+        elif escolha == '3':
+            nome = input("Digite o nome do item: ")
+            quantidade = int(input("Digite a quantidade a ser adicionada: "))
+            try:
+                adicionar_quantidade(nome, quantidade)
+                print(f"Quantidade adicionada ao item '{nome}'.")
+            except ValueError as e:
+                print(e)
+
+        elif escolha == '4':
+            nome = input("Digite o nome do item: ")
+            quantidade = int(input("Digite a quantidade a ser removida: "))
+            try:
+                remover_quantidade(nome, quantidade)
+                print(f"Quantidade removida do item '{nome}'.")
+            except ValueError as e:
+                print(e)
+
+        elif escolha == '5':
+            nome = input("Digite o nome do item a ser buscado: ")
+            try:
+                produto = buscar_item(nome)
+                print(f"Item encontrado: {produto}")
+            except ValueError as e:
+                print(e)
+
+        elif escolha == '6':
+            itens = listar_inventario()
+            if itens:
+                for produto in itens:
+                    print(produto)
+            else:
+                print("O inventário está vazio.")
+
+        elif escolha == '7':
+            print("Saindo do menu.")
+            break
+
+        else:
+            print("Opção inválida. Tente novamente.")
+
+
