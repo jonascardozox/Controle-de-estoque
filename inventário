@@ -7,6 +7,7 @@ def adicionar_item(nome, quantidade,preço):
         raise ValueError("A quantidade deve ser maior que zero.")               
     if preço <= 0:
         raise ValueError("O preço deve ser maior que zero.")
+    inventario.append({'nome': nome, 'quantidade': quantidade, 'preço': preço})    
     
 
 def remover_item(nome):
@@ -64,7 +65,6 @@ def menu():
             preço = float(input("Digite o preço: ").strip().replace(",", "."))
             try:
                 adicionar_item(nome, quantidade, preço)
-                inventario.append({'nome': nome, 'quantidade': quantidade, 'preço': preço})
                 print(f"Item '{nome}' adicionado com sucesso.")
             except ValueError as e:
                 print(e)
