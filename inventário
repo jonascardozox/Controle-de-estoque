@@ -1,25 +1,28 @@
 inventario = []
 
 def adicionar_item(nome, quantidade,preço):
-    if not nome.strip():
+    if not nome.strip(): 
         raise ValueError("O nome do item não pode estar vazio.")
     if quantidade <= 0:
         raise ValueError("A quantidade deve ser maior que zero.")               
     if preço <= 0:
         raise ValueError("O preço deve ser maior que zero.")
+    for produto in inventario:
+        if produto['nome'].strip().lower() == nome.strip().lower():
+            raise ValueError("Item já existe no inventário.")
     inventario.append({'nome': nome, 'quantidade': quantidade, 'preço': preço})    
     
 
 def remover_item(nome):
     for produto in inventario:
-        if produto['nome'] == nome:
+        if produto['nome'].strip().lower() == nome.strip().lower():
             inventario.remove(produto)
             return
     raise ValueError("Item não encontrado no inventário.")
 
 def adicionar_quantidade(nome, quantidade):
     for produto in inventario:
-        if produto['nome'] == nome:
+        if produto['nome'].strip().lower() == nome.strip().lower():
             if quantidade <= 0:
                 raise ValueError("A quantidade a ser adicionada deve ser maior que zero.")
             produto['quantidade'] += quantidade
@@ -28,7 +31,7 @@ def adicionar_quantidade(nome, quantidade):
 
 def remover_quantidade(nome, quantidade):
     for produto in inventario:
-        if produto['nome'] == nome:
+        if produto['nome'].strip().lower() == nome.strip().lower():
             if quantidade <= 0:
                 raise ValueError("A quantidade a ser removida deve ser maior que zero.")
             if produto['quantidade'] < quantidade:
@@ -39,7 +42,7 @@ def remover_quantidade(nome, quantidade):
 
 def buscar_item(nome):
     for produto in inventario:
-        if produto['nome'] == nome:
+        if produto['nome'].strip().lower() == nome.strip().lower():
             return produto
     raise ValueError("Item não encontrado no inventário.")
 
@@ -48,7 +51,7 @@ def listar_inventario():
 
 def menu():
     while True:
-        print("\nMenu do Inventário:")
+        print("\nMenu do Inventário:\n")
         print("1. Adicionar item")
         print("2. Remover item")
         print("3. Adicionar quantidade")
@@ -60,36 +63,36 @@ def menu():
         escolha = input("Escolha uma opção: ")
 
         if escolha == '1':
-            nome = input("Digite o nome do item: ")
-            quantidade = int(input("Digite a quantidade: "))
-            preço = float(input("Digite o preço: ").strip().replace(",", "."))
-            try:
+            try:            
+                nome = input("Digite o nome do item: ").strip()
+                quantidade = int(input("Digite a quantidade: "))
+                preço = float(input("Digite o preço: ").strip().replace(",", "."))
                 adicionar_item(nome, quantidade, preço)
                 print(f"Item '{nome}' adicionado com sucesso.")
             except ValueError as e:
-                print(e)
+                print(e)    
 
         elif escolha == '2':
-            nome = input("Digite o nome do item a ser removido: ")
             try:
+                nome = input("Digite o nome do item a ser removido: ").strip()
                 remover_item(nome)
                 print(f"Item '{nome}' removido com sucesso.")
             except ValueError as e:
                 print(e)
 
         elif escolha == '3':
-            nome = input("Digite o nome do item: ")
-            quantidade = int(input("Digite a quantidade a ser adicionada: "))
             try:
+                nome = input("Digite o nome do item: ")
+                quantidade = int(input("Digite a quantidade a ser adicionada: "))
                 adicionar_quantidade(nome, quantidade)
                 print(f"Quantidade adicionada ao item '{nome}'.")
             except ValueError as e:
                 print(e)
 
         elif escolha == '4':
-            nome = input("Digite o nome do item: ")
-            quantidade = int(input("Digite a quantidade a ser removida: "))
             try:
+                nome = input("Digite o nome do item: ")
+                quantidade = int(input("Digite a quantidade a ser removida: "))
                 remover_quantidade(nome, quantidade)
                 print(f"Quantidade removida do item '{nome}'.")
             except ValueError as e:
@@ -99,7 +102,7 @@ def menu():
             nome = input("Digite o nome do item a ser buscado: ")
             try:
                 produto = buscar_item(nome)
-                print(f"Item encontrado: {produto}")
+                print(f"Item encontrado: {produto['nome']}, {produto['quantidade']} e R$ {produto['preço']:.2f}")
             except ValueError as e:
                 print(e)
 
@@ -107,7 +110,7 @@ def menu():
             itens = listar_inventario()
             if itens:
                 for produto in itens:
-                    print(produto)
+                    print(f"Nome: {produto['nome']} | Qtd: {produto['quantidade']} | Preço: R$ {produto['preço']:.2f}")
             else:
                 print("O inventário está vazio.")
 
